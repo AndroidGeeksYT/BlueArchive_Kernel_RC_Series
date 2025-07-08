@@ -1,0 +1,12 @@
+# Build output
+out/
+*.o
+*.ko
+*.mod.c
+.tmp_versions/
+# Patches / rejects
+*.orig
+*.rej
+# Tags & cscope
+tags
+cscope.*
