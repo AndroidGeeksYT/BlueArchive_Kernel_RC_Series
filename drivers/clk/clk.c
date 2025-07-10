@@ -63,7 +63,7 @@ static DEFINE_MUTEX(vdd_class_list_lock);
  */
 static LIST_HEAD(clk_rate_change_list);
 
-static struct hlist_head *all_lists[] = {
+static struct hlist_head *all_lists[] __maybe_unused = {
 	&clk_root_list,
 	&clk_orphan_list,
 	NULL,
