@@ -17,6 +17,13 @@ fi
 
 compiler="$*"
 
+# Skip deprecated or missing llvm-gcc compiler
+if echo "$compiler" | grep -q "llvm-gcc"; then
+    echo "Skipping deprecated compiler: llvm-gcc"
+    exit 0
+fi
+
+
 if [ ${#compiler} -eq 0 ]; then
 	echo "Error: No compiler specified."
 	printf "Usage:\n\t$0 <gcc-command>\n"

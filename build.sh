@@ -13,12 +13,10 @@ anykernel="${HOME}/anykernel"
 kernel_name="ブルーアーカイブ-Kernel-RC5"
 KERVER=$(make kernelversion)
 zip_name="${kernel_name}-$(date +"%d%m%Y-%H%M")-signed.zip"
-TC="${HOME}/toolchains/LLVM-20.1.6-Linux-ARM64"
 
 # Export Path and Variables
 echo "##### Export Path and Environment Variables #####"
 
-export PATH="${TC}/bin:${PATH}"
 export CONFIG_FILE="vendor/violet-perf_defconfig"
 export ARCH="arm64"
 export SUBARCH="arm64"
@@ -50,35 +48,17 @@ else
   echo "##### Defconfig Generation Failed #####"
 fi
 
-# Export Path and Variables Again
-echo "##### Export Path and Environment Variables Again #####"
-
-export PATH="${TC}/bin:${PATH}"
-export CONFIG_FILE="vendor/violet-perf_defconfig"
-export ARCH="arm64"
-export SUBARCH="arm64"
-export CC="clang"
-export LLVM="1"
-export LLVM_IAS="1"
-export CLANG_TRIPLE="aarch64-linux-gnu-"
-export CROSS_COMPILE="aarch64-linux-gnu-"
-export CROSS_COMPILE_ARM32="arm-linux-gnueabi-"
-export LD="aarch64-linux-gnu-ld.bfd"
-export KBUILD_BUILD_HOST=ubuntu
-export KBUILD_BUILD_USER=AndroidGeeks
-
 # Compiling the Kernel
 echo "##### Starting Kernel Build #####"
 
-make -j"${NPROC}" \
+make -j"$(nproc)" \
     O="${objdir}" \
-    ARCH="${ARCH}" \
-    CC="clang" \
-    CLANG_TRIPLE="aarch64-linux-gnu-" \
-    CROSS_COMPILE="aarch64-linux-gnu-" \
-    CROSS_COMPILE_ARM32="arm-linux-gnueabi-" \
+    ARCH=arm64 \
     LLVM=1 \
     LLVM_IAS=1 \
+    CLANG_TRIPLE=aarch64-linux-gnu- \
+    CROSS_COMPILE=aarch64-linux-gnu- \
+    CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
     2>&1 | tee error.log
 
 if [[ $? == 0 ]] then
@@ -86,6 +66,10 @@ if [[ $? == 0 ]] then
 else
   echo "##### Kernel Build Failed! #####"
 fi
+
+# Changing Directory
+echo "##### Changing Directory #####"
+cd ${objdir}
 
 # Packaging the Kernel
 echo "##### Packaging the Kernel #####"
@@ -96,15 +80,15 @@ COMPILED_DTBO="${objdir}/arch/arm64/boot/dtbo.img"
 if [[ ! -f "${COMPILED_IMAGE}" ]]; then
     echo "##### Error: Compiled Image.gz-dtb not found at ${COMPILED_IMAGE} #####"
     exit 1
-  else
-    echo "##### Image.gz-dtb Found #####"
+else
+	echo "##### Image.gz-dtb Found #####"
 fi
 
 if [[ ! -f "${COMPILED_DTBO}" ]]; then
     echo "##### Error: Compiled dtbo.img not found at ${COMPILED_DTBO} #####"
     exit 1
-  else
-    echo "##### Image dtbo.img Found #####"
+else
+	echo "##### Image dtbo.img Found #####"
 fi
 
 # Clone Anykernel3
