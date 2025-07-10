@@ -214,11 +214,11 @@
  *
  * Return: number of bytes needed or SIZE_MAX on overflow.
  */
+#undef struct_size
 #define struct_size(p, member, n)					\
 	__ab_c_size(n,							\
 		    sizeof(*(p)->member) + __must_be_array((p)->member),\
 		    sizeof(*(p)))
-
 /** check_shl_overflow() - Calculate a left-shifted value and check overflow
  *
  * @a: Value to be shifted
@@ -369,6 +369,7 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
  *
  * Return: number of bytes needed or SIZE_MAX on overflow.
  */
+#undef struct_size
 #define struct_size(p, member, count)					\
 	size_add(sizeof(*(p)), flex_array_size(p, member, count))
 

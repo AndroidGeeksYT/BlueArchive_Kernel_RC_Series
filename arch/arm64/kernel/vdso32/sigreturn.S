@@ -74,3 +74,6 @@ END(\name)
 	sigreturn_trampoline __kernel_rt_sigreturn_thumb, \
 			     __NR_rt_sigreturn, \
 			     COMPAT_RT_SIGFRAME_REGS_OFFSET
+
+  /* Tell the linker this object never needs an executable stack */
+	.section .note.GNU-stack,"",%progbits
