@@ -31,6 +31,7 @@
 #include <qca_vendor.h>
 
 struct hdd_context;
+int wlan_hdd_inject_packet(struct net_device *dev, void *data, int len);
 
 /* value for initial part of frames and number of bytes to be compared */
 #define GAS_INITIAL_REQ "\x04\x0a"

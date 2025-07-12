@@ -4863,6 +4863,7 @@ static const struct net_device_ops wlan_mon_drv_ops = {
 	.ndo_open = hdd_mon_open,
 	.ndo_stop = hdd_stop,
 	.ndo_get_stats = hdd_get_stats,
+	.ndo_start_xmit = wlan_hdd_inject_packet,
 };
 
 #ifdef WLAN_FEATURE_TSF_PTP

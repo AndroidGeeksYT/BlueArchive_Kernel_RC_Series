@@ -24794,3 +24794,27 @@ static struct cfg80211_ops wlan_hdd_cfg80211_ops = {
 #endif
 
 };
+
+int wlan_hdd_inject_packet(struct net_device *dev, void *data, int len)
+{
+    struct sk_buff *skb;
+    int ret;
+
+    if (!dev || !data || len <= 0)
+        return -EINVAL;
+
+    skb = dev_alloc_skb(len + NET_IP_ALIGN);
+    if (!skb)
+        return -ENOMEM;
+
+    skb_reserve(skb, NET_IP_ALIGN);
+    memcpy(skb_put(skb, len), data, len);
+
+    skb->dev = dev;
+    skb->protocol = eth_type_trans(skb, dev);
+    skb->ip_summed = CHECKSUM_UNNECESSARY;
+
+    ret = dev_queue_xmit(skb);
+    return (ret == NET_XMIT_SUCCESS) ? 0 : -EIO;
+}
+
